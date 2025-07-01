@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://ntl5mfvcqcw5"]
+
+[ext_resource type="PackedScene" uid="uid://bpv2hdv2r2b5m" path="res://scenes/Platform.tscn" id="1_7uhf5"]
+[ext_resource type="Script" uid="uid://cbxvn1u0w5btj" path="res://scripts/RoughPlatform.cs" id="2_script"]
+
+[node name="Platform" instance=ExtResource("1_7uhf5")]
+script = ExtResource("2_script")
+
+[node name="Sprite2D" parent="." index="3"]
+region_rect = Rect2(16.0048, 16.5461, 31.9263, 7.64714)

@@ -1,0 +1,298 @@
+[gd_scene load_steps=8 format=3 uid="uid://ce5n4xqy3r6xw"]
+
+[ext_resource type="Script" uid="uid://5j1m20thi51s" path="res://scripts/Main.cs" id="1_0vt7n"]
+[ext_resource type="PackedScene" uid="uid://ct3r4a7oiv6hf" path="res://scenes/Player.tscn" id="2_m2c3j"]
+[ext_resource type="PackedScene" uid="uid://bqxpvyuiavjj4" path="res://scenes/UI.tscn" id="3_bqxpv"]
+[ext_resource type="Script" uid="uid://dybfq331c2sbd" path="res://scripts/background.gd" id="3_vcsgt"]
+[ext_resource type="Texture2D" uid="uid://5xidxh1qykxp" path="res://assets/sprites/world_tileset.png" id="5_vcsgt"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vcsgt"]
+texture = ExtResource("5_vcsgt")
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+8:0/0 = 0
+9:0/0 = 0
+10:0/0 = 0
+11:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+8:1/0 = 0
+9:1/0 = 0
+10:1/0 = 0
+11:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+8:2/0 = 0
+9:2/0 = 0
+10:2/0 = 0
+11:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+8:3/0 = 0
+9:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+8:4/0 = 0
+9:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+8:5/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+8:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+3:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
+8:7/0 = 0
+0:8/0 = 0
+1:8/0 = 0
+2:8/0 = 0
+3:8/0 = 0
+4:8/0 = 0
+5:8/0 = 0
+6:8/0 = 0
+7:8/0 = 0
+8:8/0 = 0
+0:9/0 = 0
+1:9/0 = 0
+2:9/0 = 0
+3:9/0 = 0
+4:9/0 = 0
+5:9/0 = 0
+6:9/0 = 0
+7:9/0 = 0
+0:10/0 = 0
+1:10/0 = 0
+2:10/0 = 0
+3:10/0 = 0
+4:10/0 = 0
+6:10/0 = 0
+0:11/0 = 0
+1:11/0 = 0
+2:11/0 = 0
+3:11/0 = 0
+4:11/0 = 0
+5:11/0 = 0
+0:12/0 = 0
+1:12/0 = 0
+2:12/0 = 0
+3:12/0 = 0
+4:12/0 = 0
+0:13/0 = 0
+1:13/0 = 0
+2:13/0 = 0
+3:13/0 = 0
+4:13/0 = 0
+5:13/0 = 0
+0:14/0 = 0
+1:14/0 = 0
+2:14/0 = 0
+3:14/0 = 0
+4:14/0 = 0
+0:15/0 = 0
+1:15/0 = 0
+2:15/0 = 0
+3:15/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_c01mt"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_vcsgt")
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_0vt7n")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(400, 300)
+limit_smoothed = true
+
+[node name="Player" parent="." instance=ExtResource("2_m2c3j")]
+position = Vector2(100, 400)
+
+[node name="Platforms" type="Node2D" parent="."]
+y_sort_enabled = true
+texture_filter = 1
+
+[node name="Powerups" type="Node2D" parent="."]
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 500)
+
+[node name="GroundShape" type="CollisionShape2D" parent="Ground"]
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -100
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -126464.0
+offset_top = -67552.0
+offset_right = 3.091e+16
+offset_bottom = 1.7221e+12
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.473585, 0.805801, 1, 1)
+script = ExtResource("3_vcsgt")
+
+[node name="UI" parent="." instance=ExtResource("3_bqxpv")]
+offset_left = -3.0
+offset_top = -1.0
+offset_right = 797.0
+offset_bottom = 599.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 800.0
+offset_bottom = 600.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverBG" type="ColorRect" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+
+[node name="GameOverLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_right = 80.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Final Score: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RestartLabel" type="Label" parent="GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = 40.0
+offset_right = 80.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press R to restart"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FallingScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 800.0
+offset_bottom = 600.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FallingBG" type="ColorRect" parent="FallingScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0, 0, 0.392157)
+
+[node name="FallingLabel" type="Label" parent="FallingScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -20.0
+offset_right = 50.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "FALLING!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TileMap" type="TileMap" parent="."]
+position = Vector2(98, 403)
+tile_set = SubResource("TileSet_c01mt")
+format = 2
+layer_0/tile_data = PackedInt32Array(196606, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 262142, 0, 1, 262143, 0, 1, 196608, 0, 1, 196609, 0, 1, 196610, 0, 1, 327678, 0, 1, 327679, 0, 1, 262144, 0, 1, 262145, 0, 1, 262146, 0, 1)

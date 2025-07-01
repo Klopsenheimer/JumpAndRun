@@ -1,0 +1,11 @@
+res://scenes/Main.tscn
+res://scenes/Platform.tscn
+res://scenes/Player.tscn
+res://scripts/Player.cs
+res://scripts/IcyPlatform.cs
+res://scripts/UI.cs
+res://scripts/PowerupMultiplier.cs
+res://scripts/Main.cs
+res://scripts/RoughPlatform.cs
+res://scripts/GoldPlatform.cs
+res://scripts/Platform.cs

@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3 uid="uid://bqxpvyuiavjj4"]
+
+[ext_resource type="Script" uid="uid://bl4jv6n0qb6ji" path="res://scripts/UI.cs" id="1_0vt7n"]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 800.0
+offset_bottom = 600.0
+script = ExtResource("1_0vt7n")
+
+[node name="TopLeft" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = -10.0
+
+[node name="ControlsTitle" type="Label" parent="TopLeft"]
+layout_mode = 2
+text = "Controls:"
+
+[node name="ControlsMove" type="Label" parent="TopLeft"]
+layout_mode = 2
+text = "A/D or Arrow Keys to move"
+
+[node name="ControlsJump" type="Label" parent="TopLeft"]
+layout_mode = 2
+text = "Space/W/Up to Jump"
+
+[node name="ControlsExit" type="Label" parent="TopLeft"]
+layout_mode = 2
+text = "ESC to Exit"
+
+[node name="BottomLeft" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -100.0
+offset_right = -10.0
+offset_bottom = -10.0
+
+[node name="StatusLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Status: Grounded"
+
+[node name="DoubleJumpLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Double Jump Available"
+
+[node name="ScoreLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Score: 0"
+
+[node name="HeightLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Height: 0m"
+
+[node name="PlatformsLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Platforms: 0"
+
+[node name="PowerupsLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
+text = "Powerups: 0"
