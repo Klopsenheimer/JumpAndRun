@@ -11,10 +11,12 @@ public partial class Main : Node2D
 	[Export] public PackedScene IcyPlatformScene { get; set; }
 	[Export] public PackedScene RoughPlatformScene { get; set; }
 	[Export] public PackedScene PowerupScene { get; set; }
+	[Export] public PackedScene JetpackPowerupScene { get; set; }
 
 	private int maxPlatforms = 100;
 	private List<Platform> platforms = new List<Platform>();
-	private List<PowerupMultiplier> powerups = new List<PowerupMultiplier>();
+	//private List<PowerupMultiplier> powerups = new List<PowerupMultiplier>();
+	private List<IPowerup> powerups = new List<IPowerup>();
 	private float lastPlatformY = 400;
 	private float lastPlatformX = 400;
 	private Random random = new Random();
@@ -41,6 +43,7 @@ public partial class Main : Node2D
 		IcyPlatformScene = GD.Load<PackedScene>("res://scenes/IcyPlatform.tscn");
 		RoughPlatformScene = GD.Load<PackedScene>("res://scenes/RoughPlatform.tscn");
 		PowerupScene = GD.Load<PackedScene>("res://scenes/PowerupMultiplier.tscn");
+		JetpackPowerupScene = GD.Load<PackedScene>("res://scenes/PowerupJetpack.tscn");
 
 		camera = GetNode<Camera2D>("Camera2D");
 		player = GetNode<Player>("Player");
@@ -92,7 +95,7 @@ public partial class Main : Node2D
 			if (powerup != null && !powerup.IsCollected && powerup.CheckCollision(player))
 			{
 				powerup.OnCollision(player);
-				powerup.QueueFree();
+				((Node)powerup).QueueFree();
 				powerups.Remove(powerup);
 			}
 		}
@@ -242,12 +245,23 @@ public partial class Main : Node2D
 				CreateRoughPlatform(newX, newY, newWidth);
 			else
 				CreatePlatform(newX, newY, newWidth);
-
+			/* 
 			if (random.Next(0, 100) < 15)
 			{
 				float powerupX = newX + random.Next(0, (int)newWidth - 20);
 				float powerupY = newY - 25;
 				CreatePowerup(powerupX, powerupY);
+			}
+			*/
+			if (random.Next(0, 100) < 15)
+			{
+				float powerupX = newX + random.Next(0, (int)newWidth - 20);
+				float powerupY = newY - 25;
+
+				if (random.Next(0, 2) == 0)
+					CreatePowerup(powerupX, powerupY);
+				else
+					CreateJetpackPowerup(powerupX, powerupY);
 			}
 
 			lastPlatformX = newX;
@@ -309,7 +323,23 @@ public partial class Main : Node2D
 		powerupsContainer.AddChild(powerupInstance);
 		powerups.Add(powerupInstance);
 	}
+	
+	private void CreateJetpackPowerup(float x, float y)
+	{
+		if (JetpackPowerupScene == null)
+			return;
 
+		var powerup = JetpackPowerupScene.Instantiate<PowerupJetpack>();
+		if (powerup == null)
+			return;
+
+		powerup.GlobalPosition = new Vector2(x, y);
+		powerupsContainer.AddChild(powerup);
+		powerups.Add(powerup);
+	}
+	
+	
+	
 	private void CleanupPlatforms()
 	{
 		float cleanupThreshold = Math.Max(player.GlobalPosition.Y + GetViewportRect().Size.Y * 2, lastValidY + GetViewportRect().Size.Y * 2);
@@ -324,10 +354,15 @@ public partial class Main : Node2D
 	private void CleanupPowerups()
 	{
 		float cleanupThreshold = Math.Max(player.GlobalPosition.Y + GetViewportRect().Size.Y * 2, lastValidY + GetViewportRect().Size.Y * 2);
-		var powerupsToRemove = powerups.Where(powerup => powerup != null && (powerup.GlobalPosition.Y > cleanupThreshold || powerup.IsCollected)).ToList();
+		var powerupsToRemove = powerups.Where(powerup =>
+		{
+			var node = (Node2D)powerup;
+			return node.GlobalPosition.Y > cleanupThreshold || powerup.IsCollected;
+		}).ToList();
 		foreach (var powerup in powerupsToRemove)
 		{
-			powerup?.QueueFree();
+			//powerup?.QueueFree();
+			((Node)powerup).QueueFree();
 			powerups.Remove(powerup);
 		}
 	}

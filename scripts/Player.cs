@@ -34,6 +34,10 @@ public partial class Player : CharacterBody2D
 	private const float IceEffectDuration = 2f;
 	private float iceSlipFactor = 0.7f;
 	private bool wasOnFloorLastFrame = false;
+	
+	private bool jetpackActive = false;
+	private float jetpackTimeLeft = 0f;
+	private float jetpackLiftForce = 500f; 
 
 	public override void _Ready()
 	{
@@ -42,6 +46,13 @@ public partial class Player : CharacterBody2D
 		highestY = GlobalPosition.Y;
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animatedSprite.Play("idle_right");
+	}
+	
+	public void ActivateJetpack(float duration)
+	{
+		jetpackActive = true;
+		jetpackTimeLeft = duration;
+		GD.Print($"Jetpack activated for {duration} seconds");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -59,34 +70,57 @@ public partial class Player : CharacterBody2D
 				isOnIce = false;
 			}
 		}
-
-		if (!IsGrounded)
+		
+		if (jetpackActive)
 		{
-			Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
-			coyoteTime = wasGrounded ? CoyoteTimeLimit : Math.Max(0, coyoteTime - (float)delta);
-			// Airborne animation
-			if (Velocity.Y < 0)
+			if (jetpackTimeLeft > 0)
 			{
-				animatedSprite.Play("jump_" + currentDirection);
+				if (Input.IsActionPressed("jump"))
+				{
+					Velocity = new Vector2(Velocity.X, -jetpackLiftForce);
+				}
+				else
+				{
+					Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
+				}
+				jetpackTimeLeft -= (float)delta;
 			}
 			else
 			{
-				animatedSprite.Play("fall_" + currentDirection);
+				jetpackActive = false;
 			}
 		}
-		
-		
 		else
 		{
-			coyoteTime = CoyoteTimeLimit;
-			hasDoubleJumped = false;
-			CanDoubleJump = true;
-			// Only play idle if not moving horizontally
-			if (Mathf.Abs(Velocity.X) < 0.1f)
+			if (!IsGrounded)
 			{
-				animatedSprite.Play("idle_" + currentDirection);
+				Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
+				coyoteTime = wasGrounded ? CoyoteTimeLimit : Math.Max(0, coyoteTime - (float)delta);
+				// Airborne animation
+				if (Velocity.Y < 0)
+				{
+					animatedSprite.Play("jump_" + currentDirection);
+				}
+				else
+				{
+					animatedSprite.Play("fall_" + currentDirection);
+				}
+			}
+		
+		
+			else
+			{
+				coyoteTime = CoyoteTimeLimit;
+				hasDoubleJumped = false;
+				CanDoubleJump = true;
+				// Only play idle if not moving horizontally
+				if (Mathf.Abs(Velocity.X) < 0.1f)
+				{
+					animatedSprite.Play("idle_" + currentDirection);
+				}
 			}
 		}
+		
 		
 
 		MoveAndSlide();
@@ -101,6 +135,8 @@ public partial class Player : CharacterBody2D
 
 		ClampToScreenBounds();
 		wasOnFloorLastFrame = IsOnFloor();
+		
+		
 	}
 
 	private void CheckPlatformCollisions()
@@ -225,4 +261,6 @@ public partial class Player : CharacterBody2D
 		}
 		Velocity = velocity;
 	}
+	
+	
 }
