@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ct3r4a7oiv6hf"]
+[gd_scene load_steps=42 format=3 uid="uid://ct3r4a7oiv6hf"]
 
 [ext_resource type="Script" uid="uid://pgeiwpdr5ln7" path="res://scripts/Player.cs" id="1_vhfgq"]
 [ext_resource type="Texture2D" uid="uid://barj62hf3cwrb" path="res://assets/sprites/knight1.png" id="2_3li8b"]
@@ -38,6 +38,22 @@ region = Rect2(224, 0, 32, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_d3wef"]
 atlas = ExtResource("2_v6fml")
 region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4as6"]
+atlas = ExtResource("2_3li8b")
+region = Rect2(160, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qmt83"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(64, 192, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b1r6t"]
+atlas = ExtResource("2_3li8b")
+region = Rect2(128, 224, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c0asu"]
+atlas = ExtResource("2_v6fml")
+region = Rect2(96, 224, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o4126"]
 atlas = ExtResource("2_3li8b")
@@ -183,6 +199,38 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_m4as6")
+}],
+"loop": true,
+"name": &"jetpack_left",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qmt83")
+}],
+"loop": true,
+"name": &"jetpack_right",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b1r6t")
+}],
+"loop": true,
+"name": &"jetpackfall_left",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c0asu")
+}],
+"loop": true,
+"name": &"jetpackfall_right",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_o4126")
 }, {
 "duration": 1.0,
@@ -323,4 +371,4 @@ vertical_alignment = 2
 position = Vector2(1, -6.99999)
 scale = Vector2(3.3125, 2.3125)
 sprite_frames = SubResource("SpriteFrames_3li8b")
-animation = &"jump_right"
+animation = &"jetpack_right"

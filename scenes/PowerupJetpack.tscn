@@ -1,19 +1,55 @@
-[gd_scene load_steps=4 format=3 uid="uid://co0smjf0i7b63"]
+[gd_scene load_steps=9 format=3 uid="uid://co0smjf0i7b63"]
 
-[ext_resource type="Script" uid="uid://cl5lhgvr10gkd" path="res://scripts/PowerupJetpack.cs" id="1_s6oui"]
+[ext_resource type="Script" uid="uid://cl5lhgvr10gkd" path="res://scenes/PowerupJetpack.cs" id="1_s6oui"]
 [ext_resource type="Texture2D" uid="uid://c5asko7m7vumx" path="res://assets/sprites/fruit.png" id="2_ulsi5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpdev"]
-size = Vector2(13, 13)
+size = Vector2(11, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s6oui"]
+atlas = ExtResource("2_ulsi5")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ulsi5"]
+atlas = ExtResource("2_ulsi5")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qfb8y"]
+atlas = ExtResource("2_ulsi5")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74qy7"]
+atlas = ExtResource("2_ulsi5")
+region = Rect2(32, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_klfvu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s6oui")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ulsi5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qfb8y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74qy7")
+}],
+"loop": true,
+"name": &"Jetpack",
+"speed": 10.0
+}]
 
 [node name="PowerupJetpack" type="Area2D"]
 script = ExtResource("1_s6oui")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_ulsi5")
-region_enabled = true
-region_rect = Rect2(0, 50.3884, 16.9836, 13.9039)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.5, -0.5)
+position = Vector2(-0.5, 0.5)
 shape = SubResource("RectangleShape2D_tpdev")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_klfvu")
+animation = &"Jetpack"
+autoplay = "Jetpack"

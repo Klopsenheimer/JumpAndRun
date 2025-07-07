@@ -78,10 +78,12 @@ public partial class Player : CharacterBody2D
 				if (Input.IsActionPressed("jump"))
 				{
 					Velocity = new Vector2(Velocity.X, -jetpackLiftForce);
+					animatedSprite.Play("jetpack_" + currentDirection);
 				}
 				else
 				{
 					Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
+					animatedSprite.Play("jetpackfall_" + currentDirection);
 				}
 				jetpackTimeLeft -= (float)delta;
 			}
@@ -106,8 +108,6 @@ public partial class Player : CharacterBody2D
 					animatedSprite.Play("fall_" + currentDirection);
 				}
 			}
-		
-		
 			else
 			{
 				coyoteTime = CoyoteTimeLimit;
@@ -221,21 +221,37 @@ public partial class Player : CharacterBody2D
 		{
 			velocity.X = -XVelocity;
 			currentDirection = "left";
-			if (IsGrounded) animatedSprite.Play("walk_left");
+			if (IsGrounded)
+			{
+				animatedSprite.Play("walk_left");
+			} 
 			if (isOnIce && IsGrounded)
+			{
 				velocity.X -= currentXVelocity * delta * 3;
+			}	
 			else
+			{
 				velocity.X = -currentXVelocity;
+			}
+				
 		}
 		else if (Input.IsActionPressed("move_right"))
 		{
 			velocity.X = XVelocity;
 			currentDirection = "right";
-			if (IsGrounded) animatedSprite.Play("walk_right");
+			if (IsGrounded)
+			{
+				animatedSprite.Play("walk_right");
+			} 
 			if (isOnIce && IsGrounded)
+			{
 				velocity.X += currentXVelocity * delta * 3;
+			}
 			else
+			{
 				velocity.X = currentXVelocity;
+			}
+				
 		}
 		else if (!isOnIce || !IsGrounded)
 		{

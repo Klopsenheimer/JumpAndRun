@@ -88,7 +88,10 @@ public partial class Main : Node2D
 			return;
 		}
 
-		if (platforms.Count < maxPlatforms) GeneratePlatforms();
+		if (platforms.Count < maxPlatforms)
+		{
+			GeneratePlatforms();
+		} 
 
 		foreach (var powerup in powerups.ToList())
 		{
@@ -136,20 +139,32 @@ public partial class Main : Node2D
 		{
 			fallingScreen.Visible = true;
 			if (camera != null)
+			{
 				fallingScreen.GlobalPosition = camera.GlobalPosition - GetViewportRect().Size / 2;
+			}
+				
 		}
 	}
 
 	private void ShowGameOver()
 	{
-		if (fallingScreen != null) fallingScreen.Visible = false;
+		if (fallingScreen != null)
+		{
+			fallingScreen.Visible = false;
+		} 
 		if (gameOverScreen != null)
 		{
 			gameOverScreen.Visible = true;
 			var scoreLabel = gameOverScreen.GetNodeOrNull<Label>("ScoreLabel");
-			if (scoreLabel != null) scoreLabel.Text = $"Final Score: {player?.Score ?? 0:F0}";
+			if (scoreLabel != null)
+			{
+				scoreLabel.Text = $"Final Score: {player?.Score ?? 0:F0}";
+			} 
 			if (camera != null)
+			{
 				gameOverScreen.GlobalPosition = camera.GlobalPosition - GetViewportRect().Size / 2;
+			}
+				
 		}
 	}
 
@@ -167,15 +182,30 @@ public partial class Main : Node2D
 		platforms.Clear();
 		powerups.Clear();
 		player?.Reset();
-		if (camera != null) camera.GlobalPosition = new Vector2(400, 300);
+		if (camera != null)
+		{
+			camera.GlobalPosition = new Vector2(400, 300);
+		} 
 
-		if (ui != null) ui.GlobalPosition = Vector2.Zero;
+		if (ui != null)
+		{
+			ui.GlobalPosition = Vector2.Zero;
+		} 
 
-		if (gameOverScreen != null) gameOverScreen.Visible = false;
-		if (fallingScreen != null) fallingScreen.Visible = false;
+		if (gameOverScreen != null)
+		{
+			gameOverScreen.Visible = false;
+		} 
+		if (fallingScreen != null)
+		{
+			fallingScreen.Visible = false;
+		} 
 
 		GenerateInitialPlatforms();
-		if (player != null) lastValidY = player.GlobalPosition.Y;
+		if (player != null)
+		{
+			lastValidY = player.GlobalPosition.Y;
+		} 
 	}
 
 	private void GenerateInitialPlatforms()
@@ -238,30 +268,36 @@ public partial class Main : Node2D
 
 			int platformType = random.Next(0, 100);
 			if (platformType < 5)
-				CreateGoldPlatform(newX, newY, newWidth);
-			else if (platformType < 15)
-				CreateIcyPlatform(newX, newY, newWidth);
-			else if (platformType < 25)
-				CreateRoughPlatform(newX, newY, newWidth);
-			else
-				CreatePlatform(newX, newY, newWidth);
-			/* 
-			if (random.Next(0, 100) < 15)
 			{
-				float powerupX = newX + random.Next(0, (int)newWidth - 20);
-				float powerupY = newY - 25;
-				CreatePowerup(powerupX, powerupY);
+				CreateGoldPlatform(newX, newY, newWidth);
 			}
-			*/
-			if (random.Next(0, 100) < 15)
+			else if (platformType < 15)
+			{
+				CreateIcyPlatform(newX, newY, newWidth);
+			}
+			else if (platformType < 25)
+			{
+				CreateRoughPlatform(newX, newY, newWidth);
+			}
+			else
+			{
+				CreatePlatform(newX, newY, newWidth);
+			}
+				
+			if (random.Next(0, 100) < 8)
 			{
 				float powerupX = newX + random.Next(0, (int)newWidth - 20);
 				float powerupY = newY - 25;
 
-				if (random.Next(0, 2) == 0)
-					CreatePowerup(powerupX, powerupY);
-				else
+				if (random.Next(0, 5) == 0)
+				{
 					CreateJetpackPowerup(powerupX, powerupY);
+				}
+				else
+				{
+					CreatePowerup(powerupX, powerupY);
+				}
+					
 			}
 
 			lastPlatformX = newX;
@@ -326,13 +362,9 @@ public partial class Main : Node2D
 	
 	private void CreateJetpackPowerup(float x, float y)
 	{
-		if (JetpackPowerupScene == null)
-			return;
-
+		if (JetpackPowerupScene == null) return;
 		var powerup = JetpackPowerupScene.Instantiate<PowerupJetpack>();
-		if (powerup == null)
-			return;
-
+		if (powerup == null)return;
 		powerup.GlobalPosition = new Vector2(x, y);
 		powerupsContainer.AddChild(powerup);
 		powerups.Add(powerup);

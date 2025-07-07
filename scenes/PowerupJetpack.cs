@@ -1,6 +1,7 @@
 using Godot;
-	namespace JumpAndRun.scripts{
-	public partial class PowerupMultiplier : Area2D, IPowerup
+using System;
+namespace JumpAndRun.scripts{
+	public partial class PowerupJetpack : Area2D, IPowerup
 	{
 		public int Width { get; } = 20;
 		public int Height { get; } = 20;
@@ -9,15 +10,14 @@ using Godot;
 		private ColorRect powerupVisual;
 		private ColorRect powerupBorder;
 		private Label multiplierLabel;
-
+		
 		public override void _Ready()
 		{
 			powerupVisual = GetNode<ColorRect>("PowerupVisual");
 			powerupBorder = GetNode<ColorRect>("PowerupBorder");
 			multiplierLabel = GetNode<Label>("MultiplierLabel");
-			
 		}
-
+		
 		public bool CheckCollision(Player player)
 		{
 			if (IsCollected)
@@ -34,13 +34,13 @@ using Godot;
 			
 			return playerRect.Intersects(powerupRect);
 		}
-
+		
 		public void OnCollision(Player player)
 		{
 			if (!IsCollected)
 			{
 				IsCollected = true;
-				player.ApplyScoreMultiplier(1.2f);
+				player.ActivateJetpack(2.75f);
 				Visible = false;
 			}
 		}
@@ -52,5 +52,6 @@ using Godot;
 				OnCollision(player);
 			}
 		}
+		
 	}
 }

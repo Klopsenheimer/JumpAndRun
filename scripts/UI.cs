@@ -32,7 +32,10 @@ namespace JumpAndRun.scripts{
 				doubleJumpLabel.Text = doubleJumpText;
 				doubleJumpLabel.Visible = true;
 			}
-			else doubleJumpLabel.Visible = false;
+			else
+			{
+				doubleJumpLabel.Visible = false;
+			} 
 			scoreLabel.Text = $"Score: {player.Score:F0}";
 			float height = Math.Max(0, 500 - player.GlobalPosition.Y);
 			heightLabel.Text = $"Height: {height:F0}m";

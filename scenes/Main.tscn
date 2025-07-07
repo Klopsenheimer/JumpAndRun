@@ -181,8 +181,6 @@ offset_left = -3.0
 offset_top = -1.0
 offset_right = 797.0
 offset_bottom = 599.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="GameOverScreen" type="Control" parent="."]
 visible = false
@@ -287,7 +285,8 @@ offset_right = 50.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "FALLING!"
+text = "FALLING!
+"
 horizontal_alignment = 1
 vertical_alignment = 1
 

@@ -9,6 +9,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = 800.0
 offset_bottom = 600.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_0vt7n")
 
 [node name="TopLeft" type="VBoxContainer" parent="."]
@@ -20,6 +22,7 @@ offset_left = 10.0
 offset_top = -150.0
 offset_right = 200.0
 offset_bottom = -10.0
+grow_vertical = 0
 
 [node name="ControlsTitle" type="Label" parent="TopLeft"]
 layout_mode = 2
@@ -31,7 +34,14 @@ text = "A/D or Arrow Keys to move"
 
 [node name="ControlsJump" type="Label" parent="TopLeft"]
 layout_mode = 2
-text = "Space/W/Up to Jump"
+text = "Space/W/Up to Jump
+Hold Space to use Jetpack"
+
+[node name="Powerups" type="Label" parent="TopLeft"]
+layout_mode = 2
+text = "Powerups:
+Grapes =  Jetpack
+Apple = Multiplier"
 
 [node name="ControlsExit" type="Label" parent="TopLeft"]
 layout_mode = 2
@@ -48,6 +58,8 @@ offset_left = -200.0
 offset_top = -100.0
 offset_right = -10.0
 offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
 
 [node name="StatusLabel" type="Label" parent="BottomLeft"]
 layout_mode = 2
