@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\JumpAndRun.csproj": {}
+    "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\JumpAndRun.csproj": {
+    "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\JumpAndRun.csproj",
+        "projectUniqueName": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj",
         "projectName": "JumpAndRun",
-        "projectPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\JumpAndRun.csproj",
+        "projectPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj",
         "packagesPath": "C:\\Users\\Lajos\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\.godot\\mono\\temp\\obj\\",
+        "outputPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\.godot\\mono\\temp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Lajos\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -34,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {

@@ -51,3 +51,12 @@ C:\Users\PC\OneDrive - HTL Vöcklabruck\Desktop\GodotProjects\JumpAndRunGodot\.g
 C:\Users\PC\OneDrive - HTL Vöcklabruck\Desktop\GodotProjects\JumpAndRunGodot\.godot\mono\temp\obj\Debug\JumpAndRun.pdb
 C:\Users\PC\OneDrive - HTL Vöcklabruck\Desktop\GodotProjects\JumpAndRunGodot\.godot\mono\temp\obj\Debug\JumpAndRun.genruntimeconfig.cache
 C:\Users\PC\OneDrive - HTL Vöcklabruck\Desktop\GodotProjects\JumpAndRunGodot\.godot\mono\temp\obj\Debug\ref\JumpAndRun.dll
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.csproj.AssemblyReference.cache
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.AssemblyInfoInputs.cache
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.AssemblyInfo.cs
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.csproj.CoreCompileInputs.cache
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.sourcelink.json
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.dll
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\refint\JumpAndRun.dll
+C:\Users\Lajos\Downloads\JumpAndRun\.godot\mono\temp\obj\Debug\JumpAndRun.pdb

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zK3PgLIl8MpfYU9naDqL3zGirWvCoGgP6T/bMZ6Z9weHkccGUjJ7P8+KofXUnlJ/Iqr5kfqlRdNqSTDPKI/9zQ==",
+  "dgSpecHash": "Wh4tzrNfn/w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lajos\\Downloads\\JumpAndRunGodot-main (3)\\JumpAndRunGodot-main\\JumpAndRun.csproj",
+  "projectFilePath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lajos\\.nuget\\packages\\godot.sourcegenerators\\4.4.1\\godot.sourcegenerators.4.4.1.nupkg.sha512",
     "C:\\Users\\Lajos\\.nuget\\packages\\godotsharp\\4.4.1\\godotsharp.4.4.1.nupkg.sha512",
