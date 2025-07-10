@@ -5,15 +5,14 @@ using System;
 public partial class Player : CharacterBody2D
 {
 	[Signal] public delegate void PlayerDiedEventHandler();
-
-	public string PlayerName { get; set; } = "pexlover";
+	public string PlayerName { get; set; } = "player1";
 	public float Score { get; set; } = 0;
 	public float XVelocity { get; set; } = 200;
 	public float JumpStrength { get; set; } = 400;
 	public bool IsGrounded { get; set; } = false;
 	public bool CanDoubleJump { get; set; } = true;
 	public int Width { get; set; } = 40;
-	public int Height { get; set; } = 40;
+	public int Height { get; set; } = 40; 
 	
 	// Animation
 	private AnimatedSprite2D animatedSprite;
@@ -160,6 +159,15 @@ public partial class Player : CharacterBody2D
 						break;
 					case RoughPlatform roughPlatform:
 						roughPlatform.OnPlayerLanded(this);
+						break;
+					case SmallRoughPlatform smallRoughPlatform:
+						smallRoughPlatform.OnPlayerLanded(this);
+						break;
+					case SmallGoldPlatform smallGoldPLatform:
+						smallGoldPLatform.OnPlayerLanded(this);
+						break;
+					case SmallIcyPlatforms smallIcyPlatforms:
+						smallIcyPlatforms.OnPlayerLanded(this);
 						break;
 				}
 			}

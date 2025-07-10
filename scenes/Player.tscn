@@ -363,7 +363,7 @@ offset_left = -20.0
 offset_top = -40.0
 offset_right = 20.0
 offset_bottom = -20.0
-text = "pexlover"
+text = "player1"
 horizontal_alignment = 1
 vertical_alignment = 2
 
@@ -371,4 +371,4 @@ vertical_alignment = 2
 position = Vector2(1, -6.99999)
 scale = Vector2(3.3125, 2.3125)
 sprite_frames = SubResource("SpriteFrames_3li8b")
-animation = &"jetpack_right"
+animation = &"idle_right"

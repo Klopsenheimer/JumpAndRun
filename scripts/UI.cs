@@ -1,6 +1,7 @@
 using Godot;
 using System;
-namespace JumpAndRun.scripts{
+namespace JumpAndRun.scripts
+{
 	public partial class UI : Control
 	{
 		private Label statusLabel;

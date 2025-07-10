@@ -41,7 +41,8 @@ Hold Space to use Jetpack"
 layout_mode = 2
 text = "Powerups:
 Grapes =  Jetpack
-Apple = Multiplier"
+Apple = Multiplier
+Coin = 1 Scorepoint"
 
 [node name="ControlsExit" type="Label" parent="TopLeft"]
 layout_mode = 2

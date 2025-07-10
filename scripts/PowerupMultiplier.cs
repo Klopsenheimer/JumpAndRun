@@ -1,5 +1,6 @@
 using Godot;
-	namespace JumpAndRun.scripts{
+namespace JumpAndRun.scripts
+{
 	public partial class PowerupMultiplier : Area2D, IPowerup
 	{
 		public int Width { get; } = 20;

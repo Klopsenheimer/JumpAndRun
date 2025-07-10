@@ -12,10 +12,14 @@ public partial class Main : Node2D
 	[Export] public PackedScene RoughPlatformScene { get; set; }
 	[Export] public PackedScene PowerupScene { get; set; }
 	[Export] public PackedScene JetpackPowerupScene { get; set; }
+	[Export] public PackedScene CoinPowerupScene {get; set; }
+	[Export] public PackedScene SmallPlatformScene {get; set; }
+	[Export] public PackedScene SmallRoughPlatformScene {get; set; }
+	[Export] public PackedScene SmallGoldPlatformScene {get; set; }
+	[Export] public PackedScene SmallIcyPlatformScene {get; set; }
 
 	private int maxPlatforms = 100;
 	private List<Platform> platforms = new List<Platform>();
-	//private List<PowerupMultiplier> powerups = new List<PowerupMultiplier>();
 	private List<IPowerup> powerups = new List<IPowerup>();
 	private float lastPlatformY = 400;
 	private float lastPlatformX = 400;
@@ -44,6 +48,11 @@ public partial class Main : Node2D
 		RoughPlatformScene = GD.Load<PackedScene>("res://scenes/RoughPlatform.tscn");
 		PowerupScene = GD.Load<PackedScene>("res://scenes/PowerupMultiplier.tscn");
 		JetpackPowerupScene = GD.Load<PackedScene>("res://scenes/PowerupJetpack.tscn");
+		CoinPowerupScene = GD.Load<PackedScene>("res://scenes/coin_powerup.tscn");
+		SmallPlatformScene = GD.Load<PackedScene>("res://scenes/SmallPlatform.tscn");
+		SmallRoughPlatformScene = GD.Load<PackedScene>("res://scenes/SmallRoughPlatform.tscn");
+		SmallGoldPlatformScene = GD.Load<PackedScene>("res://scenes/SmallGoldPLatform.tscn");
+		SmallIcyPlatformScene = GD.Load<PackedScene>("res://scenes/SmallIcyPlatforms.tscn");
 
 		camera = GetNode<Camera2D>("Camera2D");
 		player = GetNode<Player>("Player");
@@ -265,7 +274,7 @@ public partial class Main : Node2D
 				newX = goLeft ? lastPlatformX + distance : lastPlatformX - distance;
 				newX = Math.Max(margin, Math.Min(newX, screenWidth - newWidth - margin));
 			}
-
+			
 			int platformType = random.Next(0, 100);
 			if (platformType < 5)
 			{
@@ -279,23 +288,44 @@ public partial class Main : Node2D
 			{
 				CreateRoughPlatform(newX, newY, newWidth);
 			}
+			else if (platformType < 35)
+			{
+				CreateSmallPlatform(newX, newY, newWidth);
+			}
+			else if (platformType < 45)
+			{
+				CreateSmallRoughPlatform(newX, newY, newWidth);	
+			}
+			else if (platformType < 55)
+			{
+				CreateSmallGoldPlatform(newX, newY, newWidth);	
+			}
+			else if (platformType < 65)
+			{
+				CreateSmallIcyPlatform(newX, newY, newWidth);	
+			}
 			else
 			{
 				CreatePlatform(newX, newY, newWidth);
 			}
 				
+			// Powerups
 			if (random.Next(0, 100) < 8)
 			{
 				float powerupX = newX + random.Next(0, (int)newWidth - 20);
 				float powerupY = newY - 25;
 
-				if (random.Next(0, 5) == 0)
+				if (random.Next(0, 10) == 0)
 				{
 					CreateJetpackPowerup(powerupX, powerupY);
 				}
-				else
+				else if(random.Next(0, 5) == 0)
 				{
 					CreatePowerup(powerupX, powerupY);
+				}
+				else
+				{
+					CreateCoinPowerup(powerupX, powerupY);
 				}
 					
 			}
@@ -315,6 +345,40 @@ public partial class Main : Node2D
 		platformsContainer.AddChild(platformInstance);
 		platforms.Add(platformInstance);
 	}
+	
+	private void CreateSmallPlatform(float x, float y, float width)
+	{
+		if (SmallPlatformScene == null) return;
+		var platformInstance = SmallPlatformScene.Instantiate<SmallPlatform>();
+		if (platformInstance == null) return;
+		platformInstance.GlobalPosition = new Vector2(x, y);  
+		platformInstance.SetSize(width, 15);  
+		platformsContainer.AddChild(platformInstance);  
+		platforms.Add(platformInstance);
+	}
+	
+	private void CreateSmallRoughPlatform(float x, float y, float width)
+	{
+		if(SmallRoughPlatformScene == null) return;
+		var platformInstance = SmallRoughPlatformScene.Instantiate<SmallRoughPlatform>();
+		if(platformInstance == null) return;
+		platformInstance.GlobalPosition = new Vector2(x, y);
+		platformInstance.SetSize(width, 15);
+		platformsContainer.AddChild(platformInstance);
+		platforms.Add(platformInstance);	
+	}
+	
+	private SmallGoldPlatform CreateSmallGoldPlatform(float x, float y, float width)
+	{
+		if (SmallGoldPlatformScene == null) return null;
+		var platformInstance = SmallGoldPlatformScene.Instantiate<SmallGoldPlatform>();
+		if (platformInstance == null) return null;
+		platformInstance.GlobalPosition = new Vector2(x, y);
+		platformInstance.SetSize(width, 15);
+		platformsContainer.AddChild(platformInstance);
+		platforms.Add(platformInstance);
+		return platformInstance;
+	}
 
 	private GoldPlatform CreateGoldPlatform(float x, float y, float width)
 	{
@@ -327,8 +391,19 @@ public partial class Main : Node2D
 		platforms.Add(platformInstance);
 		return platformInstance;
 	}
-
+	
 	private void CreateIcyPlatform(float x, float y, float width)
+	{
+		if (SmallIcyPlatformScene == null) return;
+		var platformInstance = SmallIcyPlatformScene.Instantiate<SmallIcyPlatforms>();
+		if (platformInstance == null) return;
+		platformInstance.GlobalPosition = new Vector2(x, y);
+		platformInstance.SetSize(width, 15);
+		platformsContainer.AddChild(platformInstance);
+		platforms.Add(platformInstance);
+	}
+
+	private void CreateSmallIcyPlatform(float x, float y, float width)
 	{
 		if (IcyPlatformScene == null) return;
 		var platformInstance = IcyPlatformScene.Instantiate<IcyPlatform>();
@@ -370,7 +445,15 @@ public partial class Main : Node2D
 		powerups.Add(powerup);
 	}
 	
-	
+	private void CreateCoinPowerup(float x, float y)
+	{
+		if (CoinPowerupScene == null) return;
+		var powerup = CoinPowerupScene.Instantiate<CoinPowerup>();
+		if (powerup == null)return;
+		powerup.GlobalPosition = new Vector2(x, y);
+		powerupsContainer.AddChild(powerup);
+		powerups.Add(powerup);
+	}
 	
 	private void CleanupPlatforms()
 	{

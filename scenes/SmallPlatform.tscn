@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ce4a7gkxnxk1o"]
+
+[ext_resource type="Script" uid="uid://c85hmxftncynv" path="res://scripts/SmallPlatform.cs" id="1_t6jk4"]
+[ext_resource type="Texture2D" uid="uid://c0g1xnla16awl" path="res://assets/sprites/platforms.png" id="2_dd1tm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5oay4"]
+size = Vector2(32, 11)
+
+[node name="SmallPlatform" type="StaticBody2D"]
+script = ExtResource("1_t6jk4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_5oay4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-7.15256e-07, 5.96046e-08)
+scale = Vector2(2, 1.11111)
+texture = ExtResource("2_dd1tm")
+region_enabled = true
+region_rect = Rect2(-0.0250759, 0.0431519, 16.1037, 9.51322)

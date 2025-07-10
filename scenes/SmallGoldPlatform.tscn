@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://0qisitry5ewf"]
+
+[ext_resource type="Texture2D" uid="uid://c0g1xnla16awl" path="res://assets/sprites/platforms.png" id="1_a6jkm"]
+[ext_resource type="Script" uid="uid://cpvktxrgfese7" path="res://scripts/SmallGoldPlatform.cs" id="1_mjh0u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mjh0u"]
+size = Vector2(32, 13)
+
+[node name="SmallGoldPlatform" type="StaticBody2D"]
+script = ExtResource("1_mjh0u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_mjh0u")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(9.23872e-07, 5.96046e-08)
+scale = Vector2(2, 1.33333)
+texture = ExtResource("1_a6jkm")
+region_enabled = true
+region_rect = Rect2(0, 31.8231, 15.9572, 9.48172)
