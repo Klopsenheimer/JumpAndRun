@@ -149,7 +149,7 @@ position = Vector2(400, 300)
 limit_smoothed = true
 
 [node name="Player" parent="." instance=ExtResource("2_m2c3j")]
-position = Vector2(100, 400)
+position = Vector2(102, 400)
 
 [node name="Platforms" type="Node2D" parent="."]
 y_sort_enabled = true

@@ -5,7 +5,10 @@ using System;
 public partial class Player : CharacterBody2D
 {
 	[Signal] public delegate void PlayerDiedEventHandler();
-	public string PlayerName { get; set; } = "player1";
+    public int MaxHealth { get; set; } = 100;
+    public int CurrentHealth { get; set; } = 100;
+    private HealthBar healthBar;
+    public string PlayerName { get; set; } = "player1";
 	public float Score { get; set; } = 0;
 	public float XVelocity { get; set; } = 200;
 	public float JumpStrength { get; set; } = 400;
@@ -45,7 +48,14 @@ public partial class Player : CharacterBody2D
 		highestY = GlobalPosition.Y;
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		animatedSprite.Play("idle_right");
-	}
+        healthBar = GetNodeOrNull<HealthBar>("HealthBar");
+        if (healthBar != null)
+        {
+            healthBar.MaxHealth = MaxHealth;
+            healthBar.CurrentHealth = CurrentHealth;
+            healthBar.HealthDepleted += OnHealthDepleted;
+        }
+    }
 	
 	public void ActivateJetpack(float duration)
 	{
@@ -53,8 +63,28 @@ public partial class Player : CharacterBody2D
 		jetpackTimeLeft = duration;
 		GD.Print($"Jetpack activated for {duration} seconds");
 	}
+    public void TakeDamage(int damage)
+    {
+        if (CurrentHealth <= 0) return;
+        CurrentHealth -= damage;
+        healthBar?.TakeDamage(damage);
+        var tween = CreateTween();
+        tween.TweenProperty(animatedSprite, "modulate", Colors.Red, 0.1f);
+        tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.1f);
+    }
 
-	public override void _PhysicsProcess(double delta)
+    public void Heal(int healAmount)
+    {
+        CurrentHealth = Math.Min(CurrentHealth + healAmount, MaxHealth);
+        healthBar?.Heal(healAmount);
+    }
+
+    private void OnHealthDepleted() => EmitSignal(SignalName.PlayerDied);
+
+
+	public bool IsAlive() { return CurrentHealth > 0; }
+    
+    public override void _PhysicsProcess(double delta)
 	{
 		HandleInput((float)delta);
 
@@ -187,26 +217,28 @@ public partial class Player : CharacterBody2D
 		GD.Print($"Score multiplier applied: {multiplier:F1}x, total multiplier: {scoreMultiplier:F2}x");
 	}
 
-	public void Reset()
-	{
-		GlobalPosition = new Vector2(100, 400);
-		Velocity = Vector2.Zero;
-		Score = 0;
-		IsGrounded = false;
-		CanDoubleJump = true;
-		hasDoubleJumped = false;
-		highestY = 400;
-		coyoteTime = 0f;
-		scoreMultiplier = 1.0f;
-		isOnIce = false;
-		iceTimer = 0f;
-		wasOnFloorLastFrame = false;
+    public void Reset()
+    {
+        GlobalPosition = new Vector2(100, 400);
+        Velocity = Vector2.Zero;
+        Score = 0;
+        IsGrounded = false;
+        CanDoubleJump = true;
+        hasDoubleJumped = false;
+        highestY = 400;
+        coyoteTime = 0f;
+        scoreMultiplier = 1.0f;
+        isOnIce = false;
+        iceTimer = 0f;
+        wasOnFloorLastFrame = false;
 
-		// Reset jump strength to default
-		JumpStrength = 400;
-	}
+        CurrentHealth = MaxHealth;
+        healthBar?.SetHealth(CurrentHealth);
 
-	private void ClampToScreenBounds()
+        JumpStrength = 400;
+    }
+
+    private void ClampToScreenBounds()
 	{
 		var screenSize = GetViewportRect().Size;
 		var pos = GlobalPosition;

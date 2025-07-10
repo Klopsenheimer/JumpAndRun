@@ -93,11 +93,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj",
+      "projectUniqueName": "C:\\Users\\Lajos\\Downloads\\JumpAndRun_Stocki\\JumpAndRun_Stocki\\JumpAndRun.csproj",
       "projectName": "JumpAndRun",
-      "projectPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\JumpAndRun.csproj",
+      "projectPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun_Stocki\\JumpAndRun_Stocki\\JumpAndRun.csproj",
       "packagesPath": "C:\\Users\\Lajos\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun\\.godot\\mono\\temp\\obj\\",
+      "outputPath": "C:\\Users\\Lajos\\Downloads\\JumpAndRun_Stocki\\JumpAndRun_Stocki\\.godot\\mono\\temp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lajos\\AppData\\Roaming\\NuGet\\NuGet.Config",
