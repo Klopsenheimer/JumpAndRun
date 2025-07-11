@@ -78,7 +78,7 @@ namespace JumpAndRun.scripts
 			if (!hasBeenUsed)
 			{
 				hasBeenUsed = true;
-				player.ApplyScoreMultiplier(2);
+				player.ApplyScoreMultiplier(1.2f);
 				GD.Print($"Small gold platform bonus! Updated Score: {player.Score}");
 			}
 		}

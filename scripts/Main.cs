@@ -6,18 +6,18 @@ using System.Linq;
 
 public partial class Main : Node2D
 {
-    [Export] public PackedScene EnemyScene { get; set; }
-    [Export] public PackedScene PlatformScene { get; set; }
+	[Export] public PackedScene EnemyScene { get; set; }
+	[Export] public PackedScene PlatformScene { get; set; }
 	[Export] public PackedScene GoldPlatformScene { get; set; }
 	[Export] public PackedScene IcyPlatformScene { get; set; }
 	[Export] public PackedScene RoughPlatformScene { get; set; }
 	[Export] public PackedScene PowerupScene { get; set; }
 	[Export] public PackedScene JetpackPowerupScene { get; set; }
-	[Export] public PackedScene CoinPowerupScene {get; set;}
-	[Export] public PackedScene SmallPlatformScene {get; set;}
-	[Export] public PackedScene SmallRoughPlatformScene {get; set;}
-	[Export] public PackedScene SmallGoldPlatformScene {get; set;}
-	[Export] public PackedScene SmallIcyPlatformScene {get; set;}
+	[Export] public PackedScene CoinPowerupScene { get; set; }
+	[Export] public PackedScene SmallPlatformScene { get; set; }
+	[Export] public PackedScene SmallRoughPlatformScene { get; set; }
+	[Export] public PackedScene SmallGoldPlatformScene { get; set; } 
+	[Export] public PackedScene SmallIcyPlatformScene { get; set; }
 
 	private int maxPlatforms = 100;
 	private List<Platform> platforms = new List<Platform>();
@@ -40,10 +40,10 @@ public partial class Main : Node2D
 	private const float GROUND_LEVEL = 500f;
 	private const float DEATH_BOUNDARY = 700f;
 	private const float MAX_PLATFORM_DISTANCE = 180f;
-    private List<Enemy> enemies = new List<Enemy>();
-    private Node2D enemiesContainer;
+	private List<Enemy> enemies = new List<Enemy>();
+	private Node2D enemiesContainer;
 
-    public override void _Ready()
+	public override void _Ready()
 	{
 		PlatformScene = GD.Load<PackedScene>("res://scenes/Platform.tscn");
 		GoldPlatformScene = GD.Load<PackedScene>("res://scenes/GoldPlatform.tscn");
@@ -56,10 +56,10 @@ public partial class Main : Node2D
 		SmallRoughPlatformScene = GD.Load<PackedScene>("res://scenes/SmallRoughPlatform.tscn");
 		SmallGoldPlatformScene = GD.Load<PackedScene>("res://scenes/SmallGoldPLatform.tscn");
 		SmallIcyPlatformScene = GD.Load<PackedScene>("res://scenes/SmallIcyPlatforms.tscn");
-        EnemyScene = GD.Load<PackedScene>("res://scenes/Enemy.tscn");
+		EnemyScene = GD.Load<PackedScene>("res://scenes/Enemy.tscn");
 
-        enemiesContainer = GetNode<Node2D>("Enemies");
-        camera = GetNode<Camera2D>("Camera2D");
+		enemiesContainer = GetNode<Node2D>("Enemies");
+		camera = GetNode<Camera2D>("Camera2D");
 		player = GetNode<Player>("Player");
 		platformsContainer = GetNode<Node2D>("Platforms");
 		powerupsContainer = GetNode<Node2D>("Powerups");
@@ -117,20 +117,20 @@ public partial class Main : Node2D
 				powerups.Remove(powerup);
 			}
 		}
-        foreach (var enemy in enemies.ToList())
-        {
-            if (enemy == null || !IsInstanceValid(enemy))
-            {
-                enemies.Remove(enemy);
-                continue;
-            }
-            if (enemy.GlobalPosition.Y > player.GlobalPosition.Y + GetViewportRect().Size.Y * 2)
-            {
-                enemy.QueueFree();
-                enemies.Remove(enemy);
-            }
-        }
-        if (player.GlobalPosition.Y > DEATH_BOUNDARY ||
+		foreach (var enemy in enemies.ToList())
+		{
+			if (enemy == null || !IsInstanceValid(enemy))
+			{
+				enemies.Remove(enemy);
+				continue;
+			}
+			if (enemy.GlobalPosition.Y > player.GlobalPosition.Y + GetViewportRect().Size.Y * 2)
+			{
+				enemy.QueueFree();
+				enemies.Remove(enemy);
+			}
+		}
+		if (player.GlobalPosition.Y > DEATH_BOUNDARY ||
 			(player.GlobalPosition.Y > lastValidY + GetViewportRect().Size.Y * 1.5f && player.Velocity.Y > 0))
 		{
 			StartDying();
@@ -153,8 +153,8 @@ public partial class Main : Node2D
 			lastValidY = player.GlobalPosition.Y;
 			CleanupPowerups();
 			CleanupPlatforms();
-            CleanupEnemies();
-        }
+			CleanupEnemies();
+		}
 
 		ui?.UpdateUI(player, platforms.Count, powerups.Count(p => p != null && !p.IsCollected));
 	}
@@ -210,8 +210,8 @@ public partial class Main : Node2D
 		platforms.Clear();
 		powerups.Clear();
 		player?.Reset();
-        enemies.Clear(); 
-        if (camera != null)
+		enemies.Clear(); 
+		if (camera != null)
 		{
 			camera.GlobalPosition = new Vector2(400, 300);
 		} 
@@ -316,11 +316,11 @@ public partial class Main : Node2D
 			{
 				CreateSmallRoughPlatform(newX, newY, newWidth);	
 			}
-			else if (platformType < 55)
+			else if (platformType < 50)
 			{
 				CreateSmallGoldPlatform(newX, newY, newWidth);	
 			}
-			else if (platformType < 65)
+			else if (platformType < 60)
 			{
 				CreateSmallIcyPlatform(newX, newY, newWidth);	
 			}
@@ -349,27 +349,27 @@ public partial class Main : Node2D
 				}
 					
 			}
-            if (random.Next(0, 100) < 5) 
-            {
-                float enemyX = newX + random.Next(0, (int)newWidth - 40);
-                float enemyY = newY - 50;
-                CreateEnemy(enemyX, enemyY);
-            }
-            lastPlatformX = newX;
+			if (random.Next(0, 100) < 5) 
+			{
+				float enemyX = newX + random.Next(0, (int)newWidth - 40);
+				float enemyY = newY - 50;
+				CreateEnemy(enemyX, enemyY);
+			}
+			lastPlatformX = newX;
 			lastPlatformY = newY;
 		}
 	}
-    private void CreateEnemy(float x, float y)
-    {
-        if (EnemyScene == null) return;
-        var enemyInstance = EnemyScene.Instantiate<Enemy>();
-        if (enemyInstance == null) return;
+	private void CreateEnemy(float x, float y)
+	{
+		if (EnemyScene == null) return;
+		var enemyInstance = EnemyScene.Instantiate<Enemy>();
+		if (enemyInstance == null) return;
 
-        enemyInstance.GlobalPosition = new Vector2(x, y);
-        enemiesContainer.AddChild(enemyInstance);
-        enemies.Add(enemyInstance);
-    }
-    private void CreatePlatform(float x, float y, float width)
+		enemyInstance.GlobalPosition = new Vector2(x, y);
+		enemiesContainer.AddChild(enemyInstance);
+		enemies.Add(enemyInstance);
+	}
+	private void CreatePlatform(float x, float y, float width)
 	{
 		if (PlatformScene == null) return;
 		var platformInstance = PlatformScene.Instantiate<Platform>();
@@ -515,14 +515,14 @@ public partial class Main : Node2D
 			powerups.Remove(powerup);
 		}
 	}
-    private void CleanupEnemies()
-    {
-        float cleanupThreshold = Math.Max(player.GlobalPosition.Y + GetViewportRect().Size.Y * 2, lastValidY + GetViewportRect().Size.Y * 2);
-        var enemiesToRemove = enemies.Where(enemy => enemy != null && enemy.GlobalPosition.Y > cleanupThreshold).ToList();
-        foreach (var enemy in enemiesToRemove)
-        {
-            enemy?.QueueFree();
-            enemies.Remove(enemy);
-        }
-    }
+	private void CleanupEnemies()
+	{
+		float cleanupThreshold = Math.Max(player.GlobalPosition.Y + GetViewportRect().Size.Y * 2, lastValidY + GetViewportRect().Size.Y * 2);
+		var enemiesToRemove = enemies.Where(enemy => enemy != null && enemy.GlobalPosition.Y > cleanupThreshold).ToList();
+		foreach (var enemy in enemiesToRemove)
+		{
+			enemy?.QueueFree();
+			enemies.Remove(enemy);
+		}
+	}
 }

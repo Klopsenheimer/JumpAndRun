@@ -4,18 +4,18 @@
 [ext_resource type="Texture2D" uid="uid://c0g1xnla16awl" path="res://assets/sprites/platforms.png" id="2_dd1tm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5oay4"]
-size = Vector2(32, 11)
+size = Vector2(34, 13)
 
 [node name="SmallPlatform" type="StaticBody2D"]
 script = ExtResource("1_t6jk4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -0.5)
+position = Vector2(0, -1.5)
 shape = SubResource("RectangleShape2D_5oay4")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-7.15256e-07, 5.96046e-08)
-scale = Vector2(2, 1.11111)
+position = Vector2(-2.38419e-07, -1.78814e-07)
+scale = Vector2(2.125, 1.33333)
 texture = ExtResource("2_dd1tm")
 region_enabled = true
-region_rect = Rect2(-0.0250759, 0.0431519, 16.1037, 9.51322)
+region_rect = Rect2(0, 0, 16, 11)

@@ -6,7 +6,7 @@ namespace JumpAndRun.scripts
 	{
 		public override void _Ready()
 		{
-			base._Ready();
+			// base._Ready();
 		}
 
 		public void OnPlayerLanded(Player player)

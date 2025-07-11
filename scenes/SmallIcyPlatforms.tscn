@@ -17,4 +17,4 @@ position = Vector2(0, 3.57628e-07)
 scale = Vector2(2.53333, 1.4)
 texture = ExtResource("2_jlckl")
 region_enabled = true
-region_rect = Rect2(0, 47.2597, 15.728, 10.8608)
+region_rect = Rect2(0, 47.26, 16, 11)
