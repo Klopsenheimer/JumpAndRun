@@ -1,23 +1,27 @@
 using Godot;
 using JumpAndRun.scripts;
 using System;
+using System.Collections.Generic;
+
 
 public partial class Player : CharacterBody2D
 {
 	[Signal] public delegate void PlayerDiedEventHandler();
-	public int MaxHealth { get; set; } = 100;
-	public int CurrentHealth { get; set; } = 100;
+	[Export] public int MaxHealth { get; set; } = 100;
+	[Export] public int CurrentHealth { get; set; } = 100;
 	private HealthBar healthBar;
-	public string PlayerName { get; set; } = "player1";
-	public float Score { get; set; } = 0;
-	public float XVelocity { get; set; } = 200;
-	public float JumpStrength { get; set; } = 400;
-	public bool IsGrounded { get; set; } = false;
-	public bool CanDoubleJump { get; set; } = true;
-	public int Width { get; set; } = 40;
-	public int Height { get; set; } = 40; 
-	
-	// Animation
+	[Export] public string PlayerName { get; set; } = "player1";
+	[Export] public float Score { get; set; } = 0;
+	[Export] public float XVelocity { get; set; } = 200;
+	[Export] public float JumpStrength { get; set; } = 400;
+	[Export] public bool IsGrounded { get; set; } = false;
+	[Export] public bool CanDoubleJump { get; set; } = true;
+	[Export] public int Width { get; set; } = 40;
+	[Export] public int Height { get; set; } = 40;
+	[Export] public int AttackDamage { get; set; } = 10;
+	[Export] public float AttackRange { get; set; } = 40f;
+
+
 	private AnimatedSprite2D animatedSprite;
 	private string currentDirection = "right";
 	private bool wasGrounded = false;
@@ -25,30 +29,23 @@ public partial class Player : CharacterBody2D
 	private const float Gravity = 980;
 	private const float MaxFallSpeed = 800;
 	private const float GroundLevel = 500;
-	private bool hasDoubleJumped = false;
-	private float highestY = 400;
-	private float coyoteTime = 0f;
+	[Export] private bool hasDoubleJumped = false;
+	[Export] private float highestY = 400;
+	[Export] private float coyoteTime = 0f;
 	private const float CoyoteTimeLimit = 0.1f;
-	private float scoreMultiplier = 1.0f;
-	private Label nameLabel;
-	private bool isOnIce = false;
-	private bool isOnIcyPlatform = false;
-	private float iceAcceleration = 0.5f;
-	private float iceDeceleration = 0.2f;
-	private float iceMaxSpeedMultiplier = 1.5f;
-	
-	// More slippery (harder to control):
-	// private float iceAcceleration = 0.3f;
-	//private float iceDeceleration = 0.1f;
+	[Export] private float scoreMultiplier = 1.0f;
+	[Export] private Label nameLabel;
+	[Export] private bool isOnIce = false;
+	[Export] private bool isOnIcyPlatform = false;
+	[Export] private float iceAcceleration = 0.5f;
+	[Export] private float iceDeceleration = 0.2f;
+	[Export] private float iceMaxSpeedMultiplier = 1.5f;
 
-	// Less slippery (easier to control):
-	// private float iceAcceleration = 0.7f;
-	// private float iceDeceleration = 0.4f;
 	private bool wasOnFloorLastFrame = false;
-	
+
 	private bool jetpackActive = false;
 	private float jetpackTimeLeft = 0f;
-	private float jetpackLiftForce = 500f; 
+	[Export] private float jetpackLiftForce = 500f;
 
 	public override void _Ready()
 	{
@@ -66,12 +63,45 @@ public partial class Player : CharacterBody2D
 		}
 	}
 	
+	public void Attack()
+	{
+	var spaceState = GetWorld2D().DirectSpaceState;
+	var attackDirection = currentDirection == "right" ? Vector2.Right : Vector2.Left;
+	var attackPosition = GlobalPosition + attackDirection * AttackRange;
+	var shape = new CircleShape2D();
+	shape.Radius = AttackRange / 2;
+	var shapeParams = new PhysicsShapeQueryParameters2D();
+	shapeParams.Shape = shape;
+	shapeParams.Transform = new Transform2D(0, attackPosition);
+	shapeParams.CollisionMask = 1 << 0; // Adjust to your enemy collision layer
+	shapeParams.CollideWithAreas = true;
+	shapeParams.CollideWithBodies = true;
+	var results = spaceState.IntersectShape(shapeParams, 32);
+	
+	foreach (var dict in results)
+	{
+		var colliderObj = dict["collider"];
+		if (colliderObj.AsGodotObject() is Node collider)
+		{
+			if (collider is Enemy enemy)
+			{
+				enemy.TakeDamage(AttackDamage);
+				GD.Print($"Attacked enemy: {enemy.Name} for {AttackDamage} damage.");
+			}
+		}
+	}
+	//animatedSprite.Play("attack_" + currentDirection);
+}
+
+
+
 	public void ActivateJetpack(float duration)
 	{
 		jetpackActive = true;
 		jetpackTimeLeft = duration;
 		GD.Print($"Jetpack activated for {duration} seconds");
 	}
+
 	public void TakeDamage(int damage)
 	{
 		if (CurrentHealth <= 0) return;
@@ -89,26 +119,14 @@ public partial class Player : CharacterBody2D
 	}
 
 	private void OnHealthDepleted() => EmitSignal(SignalName.PlayerDied);
-
-
 	public bool IsAlive() { return CurrentHealth > 0; }
-	
+
 	public override void _PhysicsProcess(double delta)
 	{
 		HandleInput((float)delta);
-
 		bool wasGrounded = IsGrounded;
 		IsGrounded = IsOnFloor();
-		/* 
-		if (isOnIce)
-		{
-			iceTimer -= (float)delta;
-			if (iceTimer <= 0)
-			{
-				isOnIce = false;
-			}
-		}
-		*/
+
 		if (jetpackActive)
 		{
 			if (jetpackTimeLeft > 0)
@@ -125,10 +143,7 @@ public partial class Player : CharacterBody2D
 				}
 				jetpackTimeLeft -= (float)delta;
 			}
-			else
-			{
-				jetpackActive = false;
-			}
+			else jetpackActive = false;
 		}
 		else
 		{
@@ -136,166 +151,80 @@ public partial class Player : CharacterBody2D
 			{
 				Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
 				coyoteTime = wasGrounded ? CoyoteTimeLimit : Math.Max(0, coyoteTime - (float)delta);
-				// Airborne animation
-				if (Velocity.Y < 0)
-				{
-					animatedSprite.Play("jump_" + currentDirection);
-				}
-				else
-				{
-					animatedSprite.Play("fall_" + currentDirection);
-				}
+				if (Velocity.Y < 0) animatedSprite.Play("jump_" + currentDirection);
+				else animatedSprite.Play("fall_" + currentDirection);
 			}
 			else
 			{
 				coyoteTime = CoyoteTimeLimit;
 				hasDoubleJumped = false;
 				CanDoubleJump = true;
-				// Only play idle if not moving horizontally
-				if (Mathf.Abs(Velocity.X) < 0.1f)
-				{
-					animatedSprite.Play("idle_" + currentDirection);
-				}
+				if (Mathf.Abs(Velocity.X) < 0.1f) animatedSprite.Play("idle_" + currentDirection);
 			}
 		}
-		
-		
-
 		MoveAndSlide();
-
 		CheckPlatformCollisions();
-
 		if (GlobalPosition.Y < highestY)
 		{
 			highestY = GlobalPosition.Y;
 			Score = Math.Max(0, (GroundLevel - highestY) / 10) * scoreMultiplier;
 		}
-
+		if (Input.IsActionJustPressed("attack")) Attack();
+		
 		ClampToScreenBounds();
 		wasOnFloorLastFrame = IsOnFloor();
-		
-		
 	}
-	/* 
-	private void CheckPlatformCollisions()
-	{
-		bool wasOnIcyPlatform = isOnIcyPlatform;
-		isOnIcyPlatform = false; // Reset flag each frame
-		
-		// Check if we just landed (transition from not on floor to on floor)
-		if (IsOnFloor() && !wasOnFloorLastFrame)
-		{
-			for (int i = 0; i < GetSlideCollisionCount(); i++)
-			{
-				var collision = GetSlideCollision(i);
-				var collider = collision.GetCollider();
 
-				// Check for special platform types and call their OnPlayerLanded methods
-				switch (collider)
-				{
-					case GoldPlatform goldPlatform:
-						goldPlatform.OnPlayerLanded(this);
-						break;
-					case IcyPlatform icyPlatform:
-						icyPlatform.OnPlayerLanded(this);
-						isOnIcyPlatform = true;
-						break;
-					case RoughPlatform roughPlatform:
-						roughPlatform.OnPlayerLanded(this);
-						break;
-					case SmallRoughPlatform smallRoughPlatform:
-						smallRoughPlatform.OnPlayerLanded(this);
-						break;
-					case SmallGoldPlatform smallGoldPLatform:
-						smallGoldPLatform.OnPlayerLanded(this);
-						break;
-					case SmallIcyPlatforms smallIcyPlatforms:
-						smallIcyPlatforms.OnPlayerLanded(this);
-						isOnIcyPlatform = true;
-						break;
-				}
-			}
-		}
-		else if (IsOnFloor())
-		{
-			for(int i = 0; i < GetSlideCollisionCount(); i++)
-			{
-				var collision = GetSlideCollision(i);
-				var collider = collision.GetCollider();
-				if(collider is IcyPlatform || collider is SmallIcyPlatforms)
-				{
-					isOnIcyPlatform = true;
-					break;
-				}
-			}
-		}
-		if(wasOnIcyPlatform && !isOnIcyPlatform)
-		{
-			isOnIce = false;
-		}
-	}
-	*/
 	private void CheckPlatformCollisions()
 	{
 		bool wasOnIcyPlatform = isOnIcyPlatform;
-		isOnIcyPlatform = false; // Reset flag each frame
-	
-		// Check if we just landed (transition from not on floor to on floor)
+		isOnIcyPlatform = false;
+
 		if (IsOnFloor())
 		{
 			for (int i = 0; i < GetSlideCollisionCount(); i++)
 			{
 				var collision = GetSlideCollision(i);
 				var collider = collision.GetCollider();
-
-				// Check for special platform types and call their OnPlayerLanded methods
 				switch (collider)
 				{
-					case GoldPlatform goldPlatform:
-						goldPlatform.OnPlayerLanded(this);
-						break;
+					case GoldPlatform goldPlatform: goldPlatform.OnPlayerLanded(this); break;
 					case IcyPlatform icyPlatform:
-						icyPlatform.OnPlayerLanded(this);
-						isOnIcyPlatform = true;
-						if (!wasOnIcyPlatform)
 						{
-							isOnIce = true;
-							GD.Print("Player landed on icy platform");
-						
-							// Visual feedback
-							var tween = CreateTween();
-							tween.TweenProperty(animatedSprite, "modulate", new Color(0.7f, 0.9f, 1f, 1f), 0.2f);
-							tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.2f).SetDelay(1.6f);
+							icyPlatform.OnPlayerLanded(this);
+							isOnIcyPlatform = true;
+							if (!wasOnIcyPlatform)
+							{
+								isOnIce = true;
+								GD.Print("Player landed on icy platform");
+								var tween = CreateTween();
+								tween.TweenProperty(animatedSprite, "modulate", new Color(0.7f, 0.9f, 1f, 1f), 0.2f);
+								tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.2f).SetDelay(1.6f);
+							}
+							break;
 						}
-						break;
-					case RoughPlatform roughPlatform:
-						roughPlatform.OnPlayerLanded(this);
-						break;
-					case SmallRoughPlatform smallRoughPlatform:
-						smallRoughPlatform.OnPlayerLanded(this);
-						break;
-					case SmallGoldPlatform smallGoldPLatform:
-						smallGoldPLatform.OnPlayerLanded(this);
-						break;
+					case RoughPlatform roughPlatform: roughPlatform.OnPlayerLanded(this); break;
+					case SmallRoughPlatform smallRoughPlatform: smallRoughPlatform.OnPlayerLanded(this); break;
+					case SmallGoldPlatform smallGoldPLatform: smallGoldPLatform.OnPlayerLanded(this); break;
 					case SmallIcyPlatforms smallIcyPlatforms:
-						smallIcyPlatforms.OnPlayerLanded(this);
-						isOnIcyPlatform = true;
-						if (!wasOnIcyPlatform)
 						{
-							isOnIce = true;
-							GD.Print("Player landed on small icy platform");
-						
-							// Visual feedback
-							var tween = CreateTween();
-							tween.TweenProperty(animatedSprite, "modulate", new Color(0.7f, 0.9f, 1f, 1f), 0.2f);
-							tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.2f).SetDelay(1.6f);
+							smallIcyPlatforms.OnPlayerLanded(this);
+							isOnIcyPlatform = true;
+							if (!wasOnIcyPlatform)
+							{
+								isOnIce = true;
+								GD.Print("Player landed on small icy platform");
+
+								var tween = CreateTween();
+								tween.TweenProperty(animatedSprite, "modulate", new Color(0.7f, 0.9f, 1f, 1f), 0.2f);
+								tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.2f).SetDelay(1.6f);
+							}
+							break;
 						}
-						break;
 				}
 			}
 		}
 
-		// Check if we're still on an icy platform (for cases where we didn't just land)
 		if (!isOnIcyPlatform && IsOnFloor())
 		{
 			for (int i = 0; i < GetSlideCollisionCount(); i++)
@@ -306,36 +235,31 @@ public partial class Player : CharacterBody2D
 				if (collider is IcyPlatform || collider is SmallIcyPlatforms)
 				{
 					isOnIcyPlatform = true;
-					if (!wasOnIcyPlatform)
-					{
-						isOnIce = true;
-					}
+					if (!wasOnIcyPlatform) isOnIce = true;
 					break;
 				}
 			}
 		}
 
-		// Remove ice effect when leaving icy platforms
 		if (wasOnIcyPlatform && !isOnIcyPlatform)
 		{
 			isOnIce = false;
 			GD.Print("Player left icy platform");
 		}
 	}
-	
+
 	public void ApplyIceEffect()
 	{
-		if(isOnIcyPlatform == true)
+		if (isOnIcyPlatform == true)
 		{
 			isOnIce = true;
 			GD.Print("Ice effect applied to player");
-		
-			// Visual feedback
+
 			var tween = CreateTween();
 			tween.TweenProperty(animatedSprite, "modulate", new Color(0.7f, 0.9f, 1f, 1f), 0.2f);
 			tween.TweenProperty(animatedSprite, "modulate", Colors.White, 0.2f).SetDelay(1.6f);
 		}
-		
+
 	}
 
 	public void ApplyScoreMultiplier(float multiplier)
@@ -357,10 +281,8 @@ public partial class Player : CharacterBody2D
 		scoreMultiplier = 1.0f;
 		isOnIce = false;
 		wasOnFloorLastFrame = false;
-
 		CurrentHealth = MaxHealth;
 		healthBar?.SetHealth(CurrentHealth);
-
 		JumpStrength = 400;
 	}
 
@@ -376,62 +298,31 @@ public partial class Player : CharacterBody2D
 	{
 		Vector2 velocity = Velocity;
 		float targetVelocityX = 0f;
-
-		// Handle left/right movement input
 		if (Input.IsActionPressed("move_left"))
 		{
 			targetVelocityX = -XVelocity;
 			currentDirection = "left";
-		
-			if (IsGrounded)
-			{
-				animatedSprite.Play("walk_left");
-			}
+			if (IsGrounded) animatedSprite.Play("walk_left");
 		}
 		else if (Input.IsActionPressed("move_right"))
 		{
 			targetVelocityX = XVelocity;
 			currentDirection = "right";
-		
-			if (IsGrounded)
-			{
-				animatedSprite.Play("walk_right");
-			}
+			if (IsGrounded) animatedSprite.Play("walk_right");
 		}
 
-		// Apply movement based on whether we're on ice or not
 		if (isOnIce && isOnIcyPlatform && IsGrounded)
 		{
-			// Ice physics - smooth acceleration/deceleration
-			float acceleration = (Mathf.Sign(targetVelocityX) == Mathf.Sign(velocity.X)) 
-				? iceAcceleration 
-				: iceDeceleration;
-		
-			velocity.X = Mathf.Lerp(
-				velocity.X, 
-				targetVelocityX * iceMaxSpeedMultiplier, 
-				acceleration * delta * 10f
-			);
-		
-			// Gradual stop when no input
-			if (targetVelocityX == 0f)
-			{
-				velocity.X = Mathf.Lerp(velocity.X, 0, iceDeceleration * delta * 5f);
-			}
+			float acceleration = (Mathf.Sign(targetVelocityX) == Mathf.Sign(velocity.X)) ? iceAcceleration : iceDeceleration;
+			velocity.X = Mathf.Lerp(velocity.X, targetVelocityX * iceMaxSpeedMultiplier, acceleration * delta * 10f);
+			if (targetVelocityX == 0f) velocity.X = Mathf.Lerp(velocity.X, 0, iceDeceleration * delta * 5f);
 		}
 		else
 		{
-			// Normal ground movement - immediate response
 			velocity.X = targetVelocityX;
-		
-			// Immediate stop when no input
-			if (targetVelocityX == 0f)
-			{
-				velocity.X = 0;
-			}
+			if (targetVelocityX == 0f) velocity.X = 0;
 		}
 
-		// Handle jumping
 		if (Input.IsActionJustPressed("jump"))
 		{
 			if (IsGrounded || coyoteTime > 0)
@@ -451,5 +342,15 @@ public partial class Player : CharacterBody2D
 		}
 
 		Velocity = velocity;
+	}
+
+	public bool CheckKillEnemy(Enemy enemy)
+	{
+		return GlobalPosition.Y < enemy.GlobalPosition.Y && Velocity.Y > 0;
+	}
+
+	public void BounceAfterKill()
+	{
+		Velocity = new Vector2(Velocity.X, -JumpStrength);
 	}
 }

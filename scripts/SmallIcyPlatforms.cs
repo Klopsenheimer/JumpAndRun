@@ -5,11 +5,7 @@ namespace JumpAndRun.scripts
 	public partial class SmallIcyPlatforms : Platform
 	{
 	
-		public override void _Ready()
-		{
-			base._Ready();
-		}
-	
+		public override void _Ready() => base._Ready();
 		public void OnPlayerLanded(Player player)
 		{
 			player.ApplyIceEffect();

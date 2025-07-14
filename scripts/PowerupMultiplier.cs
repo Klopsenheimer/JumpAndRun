@@ -21,11 +21,8 @@ namespace JumpAndRun.scripts
 
 		public bool CheckCollision(Player player)
 		{
-			if (IsCollected)
-			{
-				return false;
-			} 
-			
+			if (IsCollected) return false;
+			 
 			var playerRect = new Rect2(player.GlobalPosition.X - player.Width / 2, 
 									  player.GlobalPosition.Y - player.Height / 2, 
 									  player.Width, player.Height);
@@ -44,14 +41,7 @@ namespace JumpAndRun.scripts
 				player.ApplyScoreMultiplier(1.2f);
 				Visible = false;
 			}
-		}
-		
-		public void OnBodyEntered(Node2D body)
-		{
-			if (body is Player player)
-			{
-				OnCollision(player);
-			}
-		}
-	}
+		}	
+		public void OnBodyEntered(Node2D body) => OnCollision(body as Player);
+   	}
 }

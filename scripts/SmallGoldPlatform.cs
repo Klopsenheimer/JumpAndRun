@@ -16,61 +16,30 @@ namespace JumpAndRun.scripts
 		{
 			base._Ready();
 			startPosition = Position;
-
-			if (GD.Randf() < 0.8f)
-			{
-				isMovingX = true;
-			} 
-			else
-			{ 
-				isMovingY = true;
-			}
+			if (GD.Randf() < 0.8f) isMovingX = true;
+			else isMovingY = true;
 		}
 		
 		public override void _Process(double delta)
 		{
-			if (isMovingX)
-			{
-				MoveX((float)delta);
-			} 
-			else if (isMovingY)
-			{
-				MoveY((float)delta);
-			} 
+			if (isMovingX) MoveX((float)delta);
+			else if (isMovingY) MoveY((float)delta); 
 		}
 		
 		private void MoveX(float delta)
 		{
-			if (Position.Y > 10000)
-			{
-				moveSpeed = 50;
-			} 
-			else
-			{
-				moveSpeed = Position.Y / 1000;
-			} 
+			if (Position.Y > 10000) moveSpeed = 50;
+			else moveSpeed = Position.Y / 1000;
 			currentDistance += moveSpeed * delta;
-			Position = new Vector2(
-				startPosition.X + Mathf.Sin(currentDistance) * moveRange,
-				startPosition.Y
-			);
+			Position = new Vector2(startPosition.X + Mathf.Sin(currentDistance) * moveRange, startPosition.Y);
 		}
 		
 		private void MoveY(float delta)
 		{
-			if (Position.Y > 10000)
-			{
-				moveSpeed = 50;
-			} 
-			else
-			{
-				moveSpeed = Position.Y / 1000;
-			} 
+			if (Position.Y > 10000) moveSpeed = 50;
+			else moveSpeed = Position.Y / 1000;
 			currentDistance += moveSpeed * delta;
-			Position = new Vector2(
-				startPosition.X,
-				startPosition.Y + Mathf.Sin(currentDistance) * (moveRange * 0.5f) 
-			);
+			Position = new Vector2(startPosition.X, startPosition.Y + Mathf.Sin(currentDistance) * (moveRange * 0.5f));
 		}
 
 		public void OnPlayerLanded(Player player)

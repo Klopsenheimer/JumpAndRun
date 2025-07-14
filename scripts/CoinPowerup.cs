@@ -17,19 +17,15 @@ namespace JumpAndRun.scripts
 		{
 			powerupVisual = GetNode<ColorRect>("PowerupVisual");
 			powerupBorder = GetNode<ColorRect>("PowerupBorder");
-			
 		}
 		
 		public bool CheckCollision(Player player)
 		{
-			if (IsCollected)
-			{
-				return false;
-			} 
-			
+			if (IsCollected) return false;
 			var playerRect = new Rect2(player.GlobalPosition.X - player.Width / 2, 
 									  player.GlobalPosition.Y - player.Height / 2, 
 									  player.Width, player.Height);
+
 			var powerupRect = new Rect2(GlobalPosition.X - Width / 2, 
 									   GlobalPosition.Y - Height / 2, 
 									   Width, Height);
@@ -46,14 +42,6 @@ namespace JumpAndRun.scripts
 				Visible = false;
 			}
 		}
-		
-		public void OnBodyEntered(Node2D body)
-		{
-			if (body is Player player)
-			{
-				OnCollision(player);
-			}
-		}
-		
+		public void OnBodyEntered(Node2D body) => OnCollision(body as Player);	
 	}
 }

@@ -7,12 +7,7 @@ namespace JumpAndRun.scripts
 	{
 		private CollisionShape2D collisionShape;
 		private bool hasBeenUsed;
-		
-		public override void _Ready()
-		{
-			collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
-		}
-		
+		public override void _Ready() => collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 		public void OnPlayerLanded(Player player)
 		{
 			if(hasBeenUsed) return; 

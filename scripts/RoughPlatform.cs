@@ -6,12 +6,8 @@ namespace JumpAndRun.scripts
 	public partial class RoughPlatform : Platform
 	{
 		private bool hasBeenUsed;
+		public override void _Ready() => base._Ready();
 		
-		public override void _Ready()
-		{  
-			base._Ready();
-		}
-
 		public void OnPlayerLanded(Player player)
 		{
 			if(hasBeenUsed) return; 

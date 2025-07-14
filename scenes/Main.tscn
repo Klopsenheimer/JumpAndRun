@@ -295,3 +295,7 @@ position = Vector2(98, 403)
 tile_set = SubResource("TileSet_c01mt")
 format = 2
 layer_0/tile_data = PackedInt32Array(196606, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 262142, 0, 1, 262143, 0, 1, 196608, 0, 1, 196609, 0, 1, 196610, 0, 1, 327678, 0, 1, 327679, 0, 1, 262144, 0, 1, 262145, 0, 1, 262146, 0, 1)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Stars" type="Node2D" parent="."]

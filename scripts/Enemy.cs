@@ -52,25 +52,20 @@ public partial class Enemy : CharacterBody2D
 		startPosition = GlobalPosition;
 		patrolTarget = startPosition + Vector2.Right * PatrolDistance;
 		maxHealth = Health;
-		
-		// Setup health bar
+		//event stuff
 		healthBar.MaxHealth = maxHealth;
 		healthBar.CurrentHealth = Health;
 		healthBar.HealthDepleted += OnHealthDepleted;
 		
-		// Setup attack timer
 		attackTimer.WaitTime = AttackCooldown;
 		attackTimer.Timeout += OnAttackCooldownFinished;
 		
-		// Setup detection area
 		detectionArea.BodyEntered += OnDetectionAreaBodyEntered;
 		detectionArea.BodyExited += OnDetectionAreaBodyExited;
 		
-		// Setup attack area
 		attackArea.BodyEntered += OnAttackAreaBodyEntered;
 		attackArea.BodyExited += OnAttackAreaBodyExited;
 		
-		// Setup collision shapes for areas
 		SetupDetectionArea();
 		SetupAttackArea();
 		
@@ -96,24 +91,13 @@ public partial class Enemy : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		if (isDead) return;
-		
-		// Apply gravity
-		if (!IsOnFloor())
-		{
-			Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
-		}
-		
+		if (!IsOnFloor()) Velocity = new Vector2(Velocity.X, Math.Min(Velocity.Y + Gravity * (float)delta, MaxFallSpeed));
+
 		switch (currentState)
 		{
-			case EnemyState.Patrol:
-				HandlePatrol();
-				break;
-			case EnemyState.Chase:
-				HandleChase();
-				break;
-			case EnemyState.Attack:
-				HandleAttack();
-				break;
+			case EnemyState.Patrol: HandlePatrol(); break;
+			case EnemyState.Chase: HandleChase(); break;
+			case EnemyState.Attack: HandleAttack(); break;
 		}
 		
 		MoveAndSlide();
@@ -126,30 +110,15 @@ public partial class Enemy : CharacterBody2D
 		
 		if (distanceToTarget < 10f)
 		{
-			// Switch patrol direction
-			if (patrolTarget.X > startPosition.X)
-			{
-				patrolTarget = startPosition - Vector2.Right * PatrolDistance;
-			}
-			else
-			{
-				patrolTarget = startPosition + Vector2.Right * PatrolDistance;
-			}
+			if (patrolTarget.X > startPosition.X) patrolTarget = startPosition - Vector2.Right * PatrolDistance;
+			else patrolTarget = startPosition + Vector2.Right * PatrolDistance;
 		}
 		
-		// Move towards patrol target
 		Vector2 direction = (patrolTarget - GlobalPosition).Normalized();
 		Velocity = new Vector2(direction.X * Speed, Velocity.Y);
 		
-		// Update facing direction
-		if (direction.X > 0 && !facingRight)
-		{
-			Flip();
-		}
-		else if (direction.X < 0 && facingRight)
-		{
-			Flip();
-		}
+		if (direction.X > 0 && !facingRight) Flip();
+		else if (direction.X < 0 && facingRight) Flip();
 	}
 	
 	private void HandleChase()
@@ -163,59 +132,34 @@ public partial class Enemy : CharacterBody2D
 		Vector2 direction = (targetPlayer.GlobalPosition - GlobalPosition).Normalized();
 		Velocity = new Vector2(direction.X * Speed * 1.5f, Velocity.Y);
 		
-		// Update facing direction
-		if (direction.X > 0 && !facingRight)
-		{
-			Flip();
-		}
-		else if (direction.X < 0 && facingRight)
-		{
-			Flip();
-		}
+		if (direction.X > 0 && !facingRight) Flip();
+		else if (direction.X < 0 && facingRight) Flip();
 	}
 	
 	private void HandleAttack()
 	{
 		Velocity = new Vector2(0, Velocity.Y);
-		
-		if (!isAttacking && attackTimer.IsStopped())
-		{
-			PerformAttack();
-		}
+		if (!isAttacking && attackTimer.IsStopped()) PerformAttack();
 	}
 	
 	private void PerformAttack()
 	{
 		isAttacking = true;
 		sprite.Play("attack");
-		
-		// Deal damage to player if in range
+
 		if (targetPlayer != null && GlobalPosition.DistanceTo(targetPlayer.GlobalPosition) <= AttackRange)
 		{
-			// Try to get players health bar and deal damage
 			var playerHealthBar = targetPlayer.GetNodeOrNull<HealthBar>("HealthBar");
-			if (playerHealthBar != null)
-			{
-				playerHealthBar.TakeDamage(Damage);
-			}
-		}
-		
+			if (playerHealthBar != null) playerHealthBar.TakeDamage(Damage);
+		}		
 		attackTimer.Start();
 	}
 	
 	private void OnAttackCooldownFinished()
 	{
-		isAttacking = false;
-		
-		// Check if player is still in attack range
-		if (targetPlayer != null && GlobalPosition.DistanceTo(targetPlayer.GlobalPosition) <= AttackRange)
-		{
-			currentState = EnemyState.Attack;
-		}
-		else if (targetPlayer != null && GlobalPosition.DistanceTo(targetPlayer.GlobalPosition) <= DetectionRange)
-		{
-			currentState = EnemyState.Chase;
-		}
+		isAttacking = false;		
+		if (targetPlayer != null && GlobalPosition.DistanceTo(targetPlayer.GlobalPosition) <= AttackRange) currentState = EnemyState.Attack;
+		else if (targetPlayer != null && GlobalPosition.DistanceTo(targetPlayer.GlobalPosition) <= DetectionRange) currentState = EnemyState.Chase;
 		else
 		{
 			currentState = EnemyState.Patrol;
@@ -240,45 +184,23 @@ public partial class Enemy : CharacterBody2D
 			targetPlayer = null;
 		}
 	}
-	
-	private void OnAttackAreaBodyEntered(Node2D body)
-	{
-		if (body is Player && !isDead)
-		{
-			currentState = EnemyState.Attack;
-		}
-	}
-	
-	private void OnAttackAreaBodyExited(Node2D body)
-	{
-		if (body is Player && currentState == EnemyState.Attack)
-		{
-			currentState = EnemyState.Chase;
-		}
-	}
-	
+
+	private void OnAttackAreaBodyEntered(Node2D body) => currentState = body is Player && !isDead ? EnemyState.Attack : currentState;
+	private void OnAttackAreaBodyExited(Node2D body) => currentState = body is Player && currentState == EnemyState.Attack ? EnemyState.Chase : currentState;
+
+ 	
 	public void TakeDamage(int damage)
 	{
-		if (isDead) return;
-		
+		if (isDead) return;		
 		Health -= damage;
 		healthBar.TakeDamage(damage);
-		
-		// Flash red when taking damage
 		sprite.Modulate = Colors.Red;
 		var tween = CreateTween();
 		tween.TweenProperty(sprite, "modulate", Colors.White, 0.2f);
-		
-		if (Health <= 0)
-		{
-			Die();
-		}
+		if (Health <= 0) Die();
 	}
 	
-	private void OnHealthDepleted()
-	{
-		Die();
-	}
+	private void OnHealthDepleted() => Die();
 	
 	private void Die()
 	{
@@ -291,7 +213,6 @@ public partial class Enemy : CharacterBody2D
 		detectionArea.SetDeferred("monitoring", false);
 		attackArea.SetDeferred("monitoring", false);
 		
-		// Remove enemy after death animation
 		var tween = CreateTween();
 		tween.TweenProperty(this, "modulate", new Color(1, 1, 1, 0), 2f);
 		tween.TweenCallback(Callable.From(QueueFree));
@@ -306,21 +227,9 @@ public partial class Enemy : CharacterBody2D
 	private void UpdateAnimation()
 	{
 		if (isDead) return;
-		
-		if (isAttacking)
-		{
-			// Attack animation is already playing
-			return;
-		}
-		
-		if (Math.Abs(Velocity.X) > 0.1f)
-		{
-			sprite.Play("walk");
-		}
-		else
-		{
-			sprite.Play("idle");
-		}
+		if (isAttacking) return;
+		if (Math.Abs(Velocity.X) > 0.1f) sprite.Play("walk");
+		else sprite.Play("idle");
 	}
 	
 	public void SetPatrolDistance(float distance)
